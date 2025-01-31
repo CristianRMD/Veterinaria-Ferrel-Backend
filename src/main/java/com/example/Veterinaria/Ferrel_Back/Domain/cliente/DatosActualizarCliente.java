@@ -7,6 +7,7 @@ public record DatosActualizarCliente(
          Long id ,
          String nombre ,
          String apellido ,
+         Long dni,
          String telefono ,
          String direccion ,
          String email

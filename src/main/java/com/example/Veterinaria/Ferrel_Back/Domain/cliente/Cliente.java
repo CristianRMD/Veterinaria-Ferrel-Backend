@@ -18,9 +18,10 @@ public class Cliente {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
-private Long dni;
+
     private String nombre ;
     private String apellido ;
+    private Long dni;
     private String telefono ;
     private String direccion ;
     private String email ;
@@ -31,6 +32,7 @@ private Long dni;
 public Cliente (DatosRegistroCliente datosRegistroCliente){
     this.nombre = datosRegistroCliente.nombre();
     this.apellido =datosRegistroCliente.apellido();
+    this.dni=datosRegistroCliente.dni();
     this.direccion=datosRegistroCliente.direccion();
     this.telefono=datosRegistroCliente.direccion();
     this.email=datosRegistroCliente.email();
@@ -54,6 +56,7 @@ public Cliente (DatosRegistroCliente datosRegistroCliente){
     if (datosActualizarCliente.email()!=null){
         this.email=datosActualizarCliente.email();
     }
+
 
 
     }

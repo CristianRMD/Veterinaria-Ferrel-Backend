@@ -26,7 +26,7 @@ public class ClienteController {
 
     Cliente cliente = clienteRepository.save(new Cliente(datosRegistroCliente));
 
-    DatosRespuestaCliente datosRespuestaCliente = new DatosRespuestaCliente(cliente.getId(),cliente.getNombre(),cliente.getApellido());
+    DatosRespuestaCliente datosRespuestaCliente = new DatosRespuestaCliente(cliente.getId(),cliente.getNombre(),cliente.getApellido(),cliente.getDni());
         URI url =uriComponentsBuilder.path("/cliente/{id}").buildAndExpand(cliente.getId()).toUri();
 
     return ResponseEntity.created(url).body(datosRespuestaCliente) ;

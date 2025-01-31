@@ -9,6 +9,8 @@ public record DatosRegistroCliente(
         @NotNull
         String apellido ,
         @NotNull
+        Long dni,
+        @NotNull
         String telefono ,
         @NotNull
         String direccion ,
