@@ -23,6 +23,6 @@ public class Mascota {
     private float peso;
     private float talla;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paciente_id")
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 }
