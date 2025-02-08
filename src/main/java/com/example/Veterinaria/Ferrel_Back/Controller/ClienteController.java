@@ -48,7 +48,7 @@ public class ClienteController {
     @PutMapping("/edit")
     @Transactional
     public ResponseEntity<DatosRespuestaCliente> actualizarCliente (@PathVariable @Valid DatosActualizarCliente datosActualizarCliente){
-var cliente = clienteRepository.getReferenceById(datosActualizarCliente.id());
+    var cliente = clienteRepository.getReferenceById(datosActualizarCliente.id());
        cliente.actualizarDatos(datosActualizarCliente);
        var datosRespuestaCliente = new DatosRespuestaCliente(cliente);
     return ResponseEntity.ok(datosRespuestaCliente);
