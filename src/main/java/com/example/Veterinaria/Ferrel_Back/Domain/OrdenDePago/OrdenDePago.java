@@ -1,10 +1,13 @@
 package com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago;
 
 
+import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrden;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -20,12 +23,10 @@ public class OrdenDePago {
     private int id_orden;
     private double total;
 
-    public OrdenDePago(Integer idOrdenDePago, double montoTotal) {
+    @OneToMany(mappedBy = "OrdenDePago", cascade = CascadeType.ALL)
+    private List<ProductoOrden> productos;
 
-        this.id_orden = idOrdenDePago;
-        this.total = montoTotal;
+
+    public OrdenDePago(Integer id_orden, double total, List<ProductoOrden> productosOrden) {
     }
-
-
-
 }
