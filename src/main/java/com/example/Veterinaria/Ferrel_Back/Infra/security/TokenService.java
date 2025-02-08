@@ -22,9 +22,10 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
             return JWT.create()
-                    .withIssuer("voll med")
+                    .withIssuer("veterinaria")
                     .withSubject(usuario.getUsername())
                     .withClaim("id", usuario.getId())
+                    .withClaim("rol",usuario.getRol())
                     .withExpiresAt(generarFechaExpiracion())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
@@ -40,7 +41,8 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret); // validando firma
             verifier = JWT.require(algorithm)
-                    .withIssuer("voll med")
+                    .withIssuer("veterinaria")
+
                     .build()
                     .verify(token);
             verifier.getSubject();
