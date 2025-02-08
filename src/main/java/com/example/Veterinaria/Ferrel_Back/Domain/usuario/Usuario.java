@@ -27,6 +27,7 @@ public class Usuario implements UserDetails {
     private long id;
 private String username;
 private String password;
+private String rol;
 
     @Override
     public String getPassword() {

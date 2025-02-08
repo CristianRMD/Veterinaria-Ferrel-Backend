@@ -62,8 +62,12 @@ public class ClienteController {
         return ResponseEntity.ok(datosRespuestaCliente);
     }
 
+@GetMapping("/mascotas/{dni}")
+    public ResponseEntity retornarListaMascotas(){
+        //paginado de mascotas del respectivo usuario
 
-
+        return null;
+}
 
 
 }

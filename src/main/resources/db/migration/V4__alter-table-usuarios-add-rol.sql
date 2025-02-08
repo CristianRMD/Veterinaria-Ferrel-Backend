@@ -1,0 +1,1 @@
+alter table usuarios add rol varchar(20) ;
