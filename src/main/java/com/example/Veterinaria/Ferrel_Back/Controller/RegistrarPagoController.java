@@ -2,7 +2,7 @@ package com.example.Veterinaria.Ferrel_Back.Controller;
 
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenDePago;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenPagoRepository;
-import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.RegistrarPagosService;
+import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.Recibo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class RegistrarPagoController {
 
     @Autowired
-    private RegistrarPagosService RegistrarPagosService;
+    private Recibo.RegistrarPagosService RegistrarPagosService;
 
     @Autowired
     private OrdenPagoRepository OrdenPagoRepository;

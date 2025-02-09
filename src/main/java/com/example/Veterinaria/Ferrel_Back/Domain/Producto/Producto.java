@@ -1,16 +1,18 @@
-package com.example.Veterinaria.Ferrel_Back.Domain;
-
+package com.example.Veterinaria.Ferrel_Back.Domain.Producto;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name="producto")
+
+@Entity(name="Producto")
+@Table(name="Producto")
 public class Producto {
 
     @Id
