@@ -23,7 +23,7 @@ public class OrdenDePago {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_orden;
 
-    private Double total;
+    private Double montoTotal;
 
     @OneToMany(mappedBy = "ordenDePago", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
