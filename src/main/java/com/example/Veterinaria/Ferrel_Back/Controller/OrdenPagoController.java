@@ -12,6 +12,7 @@ import java.util.List;
 @RequestMapping("/ordenes")
 @CrossOrigin
 public class OrdenPagoController {
+    // eliminar esta clase
     @Autowired
     private OrdenPagoService ordenPagoService;
 
