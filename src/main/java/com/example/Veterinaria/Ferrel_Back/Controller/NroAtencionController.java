@@ -35,7 +35,7 @@ public class NroAtencionController {
     }
 
 
-    // endpoint para validar el cliente por documento
+    // endpoint para validar el cliente por documento (validar-cliente?documento=12345678)
     @PostMapping("/validar-cliente")
     public ResponseEntity<?> validarCliente(@RequestParam String documento) {
         if (!documento.matches("\\d{8}|\\d{9}")) {
