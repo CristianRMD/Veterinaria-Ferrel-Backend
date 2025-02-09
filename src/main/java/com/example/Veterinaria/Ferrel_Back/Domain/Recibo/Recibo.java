@@ -19,7 +19,7 @@ import java.util.Optional;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "Recibo")
 @Table(name = "Recibo")
 public class Recibo {
     @Id
