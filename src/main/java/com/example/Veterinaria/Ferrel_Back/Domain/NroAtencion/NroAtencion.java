@@ -1,4 +1,4 @@
-package com.example.Veterinaria.Ferrel_Back.Domain;
+package com.example.Veterinaria.Ferrel_Back.Domain.NroAtencion;
 
 import org.springframework.stereotype.Service;
 import java.io.*;

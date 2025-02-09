@@ -1,6 +1,6 @@
 package com.example.Veterinaria.Ferrel_Back.Controller;
 
-import com.example.Veterinaria.Ferrel_Back.Domain.NroAtencion;
+import com.example.Veterinaria.Ferrel_Back.Domain.NroAtencion.NroAtencion;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.Cliente;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.ClienteRepository;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.DatosListadoCliente;

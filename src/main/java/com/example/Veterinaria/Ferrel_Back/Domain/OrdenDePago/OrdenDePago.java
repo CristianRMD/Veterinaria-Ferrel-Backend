@@ -2,31 +2,31 @@ package com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago;
 
 
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrden;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Entity(name = "OrdenDePago")
 @Table(name = "OrdenDePago")
 public class OrdenDePago {
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id_orden;
-    private double total;
+    private Long id_orden;
 
-    @OneToMany(mappedBy = "OrdenDePago", cascade = CascadeType.ALL)
-    private List<ProductoOrden> productos;
+    private Double total;
 
+    @OneToMany(mappedBy = "ordenDePago", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ProductoOrden> productos = new ArrayList<>();
 
-    public OrdenDePago(Integer id_orden, double total, List<ProductoOrden> productosOrden) {
-    }
 }
