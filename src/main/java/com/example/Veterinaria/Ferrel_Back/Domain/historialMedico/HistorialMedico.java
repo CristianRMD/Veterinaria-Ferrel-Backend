@@ -1,23 +1,39 @@
 package com.example.Veterinaria.Ferrel_Back.Domain.historialMedico;
 
+import com.example.Veterinaria.Ferrel_Back.Domain.mascota.Mascota;
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name = "historialmedico")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class HistorialMedico {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idhistorial;
 
-    private String tipoConsulta;// puede ser un enum
+    @ManyToOne
+    @JoinColumn(name = "mascota_id", nullable = false) // FK en la BD
+    private Mascota mascota;
+
+    @Column(nullable = false)
+    private String tipoconsulta;
+
+    @Column(nullable = false, length = 500)
     private String motivo;
-    private boolean esterilizado;
+
+    @Column(nullable = false)
     private float temperatura;
+
+    @Column(nullable = false, length = 1000)
     private String resumen;
+
+    @Column(nullable = false, length = 500)
     private String receta;
-    //private Date fecha;
-    private int idMascota;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date fecha;
 }
