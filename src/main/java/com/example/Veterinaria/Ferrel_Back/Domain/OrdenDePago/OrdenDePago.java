@@ -21,9 +21,10 @@ import java.util.List;
 public class OrdenDePago {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_orden;
+    private Long idOrden;
 
-    private Double montoTotal;
+    @Column(name = "total", nullable = false)
+    private Double total;
 
     @OneToMany(mappedBy = "ordenDePago", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
