@@ -28,7 +28,7 @@ public class OrdenPagoService {
         double total = productosOrden.stream().mapToDouble(ProductoOrden::getSubtotal).sum();
 
         // Crear la orden de pago
-        OrdenDePago orden = new OrdenDePago(String.valueOf(montoTotal));
+        OrdenDePago orden = new OrdenDePago();
         orden.setMontoTotal(total);
 
         // Asignar productos a la orden
