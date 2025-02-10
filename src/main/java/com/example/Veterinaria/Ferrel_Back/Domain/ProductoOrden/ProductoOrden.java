@@ -11,8 +11,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "ProductoOrden")
-@Table(name = "ProductoOrden")
+@Entity(name = "producto_orden")
+@Table(name = "producto_orden")
 public class ProductoOrden {
 
     @Id
@@ -24,31 +24,33 @@ public class ProductoOrden {
     private double precioUnitario;
     private double subtotal;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_orden", nullable = false)
     @JsonBackReference
     private OrdenDePago ordenDePago;
 
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_producto", nullable = false)
     @JsonIgnore
-    private Producto Producto;
+    private Producto producto;
 
-    // solo para devolver el id_producto correctamente en JSON
+    private String tipo = "Producto";
+
+    // solo para devolver el id_producto en JSON correctamente
     @JsonProperty("id_producto")
     public int getIdProducto() {
-        return Producto.getId_producto();
+        return producto.getId_producto();
     }
 
     public ProductoOrden() {}
 
     public ProductoOrden(Producto producto, int cantidad) {
-        this.Producto = producto;
+        this.producto = producto;
         this.productoNombre = producto.getNombre();
         this.cantidad = cantidad;
         this.precioUnitario = producto.getPrecio_unitario();
         this.subtotal = this.precioUnitario * this.cantidad;
+        this.tipo = "Producto";
     }
 
 }
