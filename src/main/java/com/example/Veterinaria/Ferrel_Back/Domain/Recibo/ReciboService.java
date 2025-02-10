@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.ZoneId;
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class ReciboService {
@@ -27,7 +29,9 @@ public class ReciboService {
     @Transactional
     public Recibo crearRecibo(List<OrdenDePago> ordenes, Long idCliente) {
         Recibo recibo = new Recibo();
-        recibo.setIdCliente(Math.toIntExact(idCliente));
+        recibo.setFechaHoraRegistro(LocalDateTime.now(ZoneId.of("America/Lima")));
+
+
 
         BigDecimal totalOrdenes = ordenes.stream()
                 .map(orden -> BigDecimal.valueOf(orden.getTotal()))
@@ -42,9 +46,10 @@ public class ReciboService {
         BigDecimal montoConIGV = montoTotal.add(igv).setScale(2, RoundingMode.HALF_UP);
 
         recibo.setMontoTotal(montoConIGV.doubleValue());
+
         recibo = reciboRepository.save(recibo);
 
-        // Vincular órdenes al recibo
+        // vincula las ordenes al recibo
         for (OrdenDePago orden : ordenes) {
             ReciboOrden reciboOrden = new ReciboOrden();
             reciboOrden.setRecibo(recibo);

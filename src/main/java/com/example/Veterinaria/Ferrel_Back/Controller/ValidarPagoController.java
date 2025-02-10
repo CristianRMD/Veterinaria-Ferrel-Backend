@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pagos")
-public class RegistrarPagoController {
+public class ValidarPagoController {
 
     @Autowired
     private ValidarPagosService RegistrarPagosService;

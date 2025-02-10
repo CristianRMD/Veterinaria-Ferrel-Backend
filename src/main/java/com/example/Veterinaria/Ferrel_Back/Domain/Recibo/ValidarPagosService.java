@@ -28,9 +28,4 @@ public class ValidarPagosService {
 
         return clienteRepository.findByDni(dni).isPresent();
     }
-
-    public double calcularMontoTotalConIGV(List<Double> subtotales, double porcentajeIGV) {
-        double montoTotal = subtotales.stream().mapToDouble(Double::doubleValue).sum();
-        return montoTotal + (montoTotal * (porcentajeIGV / 100));
-    }
 }
