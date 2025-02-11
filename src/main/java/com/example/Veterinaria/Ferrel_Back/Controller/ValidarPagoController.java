@@ -2,7 +2,7 @@ package com.example.Veterinaria.Ferrel_Back.Controller;
 
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenDePago;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenPagoRepository;
-import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.RegistrarPagosService;
+import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.ValidarPagosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +11,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pagos")
-public class RegistrarPagoController {
+public class ValidarPagoController {
 
     @Autowired
-    private RegistrarPagosService RegistrarPagosService;
+    private ValidarPagosService RegistrarPagosService;
 
     @Autowired
     private OrdenPagoRepository OrdenPagoRepository;
@@ -45,14 +45,6 @@ public class RegistrarPagoController {
     @GetMapping("/ordenes")
     public List<OrdenDePago> obtenerOrdenes() {
         return OrdenPagoRepository.findAll();
-    }
-
-    // recordar que se debe estar sumando constantemente el precio total de cada fila y mostrarla con el +18% de igv
-
-    // guardar el recibo
-    @PostMapping("/registrar")
-    public boolean registrarRecibo(@RequestParam int id_cliente, @RequestParam int id_orden, @RequestParam double monto_total) {
-        return RegistrarPagosService.registrarRecibo(id_cliente, id_orden, monto_total);
     }
 
 

@@ -30,12 +30,4 @@ public class Mascota {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    public void actualizarDatos(DatosActualizarMascota datos) {
-        if (datos.nombre() != null) this.nombre = datos.nombre();
-        if (datos.raza() != null) this.raza = datos.raza();
-        if (datos.edad() != null) this.edad = datos.edad();
-        if (datos.sexo() != null) this.sexo = datos.sexo();
-        if (datos.peso() != null) this.peso = datos.peso();
-        if (datos.talla() != null) this.talla = datos.talla();
-    }
 }

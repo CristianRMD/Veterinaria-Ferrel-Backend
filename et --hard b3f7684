@@ -1,0 +1,22 @@
+[33m99a3420[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;32mRolVeterinario[m[33m)[m HEAD@{0}: checkout: moving from RolVeterinario to master
+[33m99a3420[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;32mRolVeterinario[m[33m)[m HEAD@{1}: merge master: Fast-forward
+[33m5ffd8ff[m[33m ([m[1;31morigin/RolVeterinario[m[33m)[m HEAD@{2}: checkout: moving from master to RolVeterinario
+[33m99a3420[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;32mRolVeterinario[m[33m)[m HEAD@{3}: rebase (finish): returning to refs/heads/master
+[33m99a3420[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;32mRolVeterinario[m[33m)[m HEAD@{4}: rebase (pick): fix: OrdenPagoService
+[33mf1fc55f[m HEAD@{5}: rebase (pick): feat: validarDocumento_RegistrarPago
+[33m4c02640[m HEAD@{6}: rebase (pick): fix: NroAtencion+consultarStock+GenerarOrdenPago
+[33mb3f7684[m HEAD@{7}: rebase (pick): feat: Generar_OrdenDePago
+[33m5613621[m HEAD@{8}: rebase (pick): feat:consultarStock
+[33m47603ae[m HEAD@{9}: rebase (pick): Cors arreglado
+[33mf315258[m HEAD@{10}: rebase (pick): SpringApi añadido
+[33mc13862a[m HEAD@{11}: rebase (pick): feat:registrarPago
+[33m843338d[m HEAD@{12}: rebase (pick): rol añadido
+[33mf666ab8[m HEAD@{13}: rebase (pick): Servicio Login establecido
+[33m5ffd8ff[m[33m ([m[1;31morigin/RolVeterinario[m[33m)[m HEAD@{14}: rebase (start): checkout refs/heads/RolVeterinario
+[33m0fa7ae8[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{15}: rebase (finish): returning to refs/heads/master
+[33m0fa7ae8[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{16}: rebase (start): checkout origin/master
+[33mab3fa41[m HEAD@{17}: checkout: moving from RolVeterinario to master
+[33m5ffd8ff[m[33m ([m[1;31morigin/RolVeterinario[m[33m)[m HEAD@{18}: commit: MascotaController y actualizarMascota
+[33mab3fa41[m HEAD@{19}: checkout: moving from master to RolVeterinario
+[33mab3fa41[m HEAD@{20}: merge origin/master: Fast-forward
+[33m788ba7a[m HEAD@{21}: clone: from https://github.com/CristianRMD/Veterinaria-Ferrel-Backend.git
