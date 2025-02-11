@@ -22,7 +22,7 @@ public class CarritoReciboService {
     public List<CarritoReciboDTO> listarCarrito() {
         List<CarritoReciboDTO> lista = new ArrayList<>();
 
-        // Obtener todos los productos en las órdenes del carrito
+        // devuelve todos los productos en las ordenes del carrito
         for (OrdenDePago orden : carrito) {
             List<ProductoOrden> productosOrdenados = productoOrdenRepository.findByOrdenDePago_IdOrden(orden.getIdOrden());
             for (ProductoOrden productoOrden : productosOrdenados) {
@@ -35,7 +35,7 @@ public class CarritoReciboService {
             }
         }
 
-        // Agregar consultas al carrito
+
         lista.addAll(consultasCarrito);
 
         return lista;
@@ -56,7 +56,7 @@ public class CarritoReciboService {
     }
 
     public void quitarConsulta() {
-        consultasCarrito.clear(); // Solo permitimos una consulta a la vez
+        consultasCarrito.clear(); // quita una consulta a la vez
     }
 
     public void limpiarCarrito() {

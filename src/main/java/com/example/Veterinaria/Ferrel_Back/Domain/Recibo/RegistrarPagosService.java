@@ -28,12 +28,11 @@ public class RegistrarPagosService {
 
     public boolean registrarRecibo(int idCliente, Integer idOrdenDePago, Double montoTotal) { // Cambiar a Double
         try {
-            if (montoTotal == null || montoTotal <= 0) { // Validación adicional
+            if (montoTotal == null || montoTotal <= 0) {
                 return false;
             }
 
-            OrdenDePago ordenPago = new OrdenDePago(); // falta pasarle en el constructor el monto total
-            // Considera relacionar con idCliente e idOrdenDePago aquí
+            OrdenDePago ordenPago = new OrdenDePago();
             ordenPagoRepository.save(ordenPago);
             return true;
         } catch (Exception e) {
