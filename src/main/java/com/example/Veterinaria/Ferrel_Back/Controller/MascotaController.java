@@ -1,73 +1,58 @@
 package com.example.Veterinaria.Ferrel_Back.Controller;
 
+import com.example.Veterinaria.Ferrel_Back.Domain.historialMedico.HistorialMedicoService;
 import com.example.Veterinaria.Ferrel_Back.Domain.mascota.*;
-import com.example.Veterinaria.Ferrel_Back.Domain.cliente.Cliente;
-import com.example.Veterinaria.Ferrel_Back.Domain.cliente.ClienteRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/mascota")
 public class MascotaController {
 
     @Autowired
-    MascotaRepository mascotaRepository;
+    private final MascotaService mascotaService;
 
-    @Autowired
-    ClienteRepository clienteRepository;
+    public MascotaController(MascotaService mascotaService) {
+        this.mascotaService = mascotaService;
+    }
 
     @PostMapping("/register")
-    public ResponseEntity<DatosRespuestaMascota> registrarMascota(@RequestBody @Valid DatosRegistroMascota datosRegistroMascota,
-                                                                  UriComponentsBuilder uriComponentsBuilder) {
-        Cliente cliente = clienteRepository.getReferenceById(datosRegistroMascota.clienteId());
-        Mascota mascota = new Mascota(
-                null, datosRegistroMascota.nombre(), datosRegistroMascota.raza(), datosRegistroMascota.edad(),
-                datosRegistroMascota.sexo(), datosRegistroMascota.peso(), datosRegistroMascota.talla(), cliente);
-
-        mascota = mascotaRepository.save(mascota);
-        URI url = uriComponentsBuilder.path("/mascota/{id}").buildAndExpand(mascota.getId()).toUri();
-
-        return ResponseEntity.created(url).body(new DatosRespuestaMascota(mascota));
+    public ResponseEntity<DatosRespuestaMascota> registrarMascota(@RequestBody @Valid DatosRegistroMascota datosRegistroMascota) {
+        DatosRespuestaMascota mascota = mascotaService.agregarMascota(datosRegistroMascota);
+        return ResponseEntity.ok(mascota); // Solo devuelve el objeto sin la URL de ubicación
     }
 
-    @GetMapping("/details")
-    public ResponseEntity<Page<DatosListadoMascota>> listaMascotas(Pageable paginacion) {
-        return ResponseEntity.ok(mascotaRepository.findAll(paginacion).map(DatosListadoMascota::new));
+    @GetMapping("/list")
+    public ResponseEntity<List<DatosListadoMascota>> listaMascotas() {
+        return ResponseEntity.ok(mascotaService.listarMascotas());
     }
+
+    @GetMapping("/cliente/{dni}")
+    public ResponseEntity<DatosMascotasPorCliente> listarMascotasPorCliente(@PathVariable Long dni) {
+        return ResponseEntity.ok(mascotaService.listarMascotasPorDNI(dni));
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<DatosRespuestaMascota> retornarDatosMascota(@PathVariable Long id) {
-        Mascota mascota = mascotaRepository.getReferenceById(id);
-        return ResponseEntity.ok(new DatosRespuestaMascota(mascota));
+        return ResponseEntity.ok(mascotaService.obtenerMascotaPorId(id));
     }
 
-    @PutMapping("/edit")
-    @Transactional
-    public ResponseEntity<DatosRespuestaMascota> actualizarMascota(@RequestBody @Valid DatosActualizarMascota datosActualizarMascota) {
-        Mascota mascota = mascotaRepository.getReferenceById(datosActualizarMascota.id());
-
-        if (datosActualizarMascota.nombre() != null) mascota.setNombre(datosActualizarMascota.nombre());
-        if (datosActualizarMascota.raza() != null) mascota.setRaza(datosActualizarMascota.raza());
-        if (datosActualizarMascota.edad() != null) mascota.setEdad(datosActualizarMascota.edad());
-        if (datosActualizarMascota.sexo() != null) mascota.setSexo(datosActualizarMascota.sexo());
-        if (datosActualizarMascota.peso() != null) mascota.setPeso(datosActualizarMascota.peso());
-        if (datosActualizarMascota.talla() != null) mascota.setTalla(datosActualizarMascota.talla());
-
-        return ResponseEntity.ok(new DatosRespuestaMascota(mascota));
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<DatosRespuestaMascota> actualizarMascota(@PathVariable Long id,
+                                                                   @RequestBody @Valid DatosActualizarMascota datosActualizarMascota) {
+        return ResponseEntity.ok(mascotaService.actualizarMascota(id, datosActualizarMascota));
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<Void> eliminarMascota(@PathVariable Long id) {
-        mascotaRepository.deleteById(id);
+        mascotaService.eliminarMascota(id);
         return ResponseEntity.noContent().build();
     }
 }
