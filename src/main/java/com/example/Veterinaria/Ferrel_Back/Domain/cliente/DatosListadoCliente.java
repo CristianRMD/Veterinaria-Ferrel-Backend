@@ -1,9 +1,9 @@
 package com.example.Veterinaria.Ferrel_Back.Domain.cliente;
 
 public record DatosListadoCliente (
-        Long id , String nombre,String apellido ,Long dni, String email,String telefono
+        Long id , String nombre,String apellido ,Long dni, String email,String telefono ,String direccion
 ) {
 public DatosListadoCliente (Cliente cliente ){
-    this (cliente.getId(), cliente.getNombre(), cliente.getApellido(), cliente.getDni(),cliente.getEmail(), cliente.getTelefono());
+    this (cliente.getId(), cliente.getNombre(), cliente.getApellido(), cliente.getDni(),cliente.getEmail(), cliente.getTelefono(),cliente.getDireccion());
 }
 }
