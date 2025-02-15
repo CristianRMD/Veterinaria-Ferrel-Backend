@@ -45,10 +45,10 @@ public class ClienteController {
     cliente.desacticarCliente();
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/edit")
+    @PutMapping("/edit/{id}")
     @Transactional
-    public ResponseEntity<DatosRespuestaCliente> actualizarCliente (@PathVariable @Valid DatosActualizarCliente datosActualizarCliente){
-    var cliente = clienteRepository.getReferenceById(datosActualizarCliente.id());
+    public ResponseEntity<DatosRespuestaCliente> actualizarCliente (@PathVariable Long id ,@RequestBody @Valid DatosActualizarCliente datosActualizarCliente){
+    var cliente = clienteRepository.getReferenceById(id);
        cliente.actualizarDatos(datosActualizarCliente);
        var datosRespuestaCliente = new DatosRespuestaCliente(cliente);
     return ResponseEntity.ok(datosRespuestaCliente);
