@@ -2,10 +2,15 @@ package com.example.Veterinaria.Ferrel_Back.Controller;
 
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenDePago;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenPagoService;
+import com.example.Veterinaria.Ferrel_Back.Domain.Producto.ProductoService;
+import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrden;
 import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.CarritoReciboDTO;
 import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.CarritoReciboService;
 import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.Recibo;
 import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.ReciboService;
+import com.example.Veterinaria.Ferrel_Back.Domain.cliente.Cliente;
+import com.example.Veterinaria.Ferrel_Back.Domain.cliente.ClienteRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,11 +22,15 @@ public class CarritoReciboController {
     private final CarritoReciboService carritoReciboService;
     private final OrdenPagoService ordenDePagoService;
     private final ReciboService reciboService;
+    private final ClienteRepository clienteRepository;
+    private final ProductoService productoService;
 
-    public CarritoReciboController(CarritoReciboService carritoReciboService, OrdenPagoService ordenDePagoService, ReciboService reciboService) {
+    public CarritoReciboController(CarritoReciboService carritoReciboService, OrdenPagoService ordenDePagoService, ReciboService reciboService, ClienteRepository clienteRepository, ProductoService productoService) {
         this.carritoReciboService = carritoReciboService;
         this.ordenDePagoService = ordenDePagoService;
         this.reciboService = reciboService;
+        this.clienteRepository = clienteRepository;
+        this.productoService = productoService;
     }
 
     @GetMapping("/listar")
@@ -44,9 +53,17 @@ public class CarritoReciboController {
     }
 
 
-    // verifica que el carrito no este vacio y vincula cada orden con el recibo antes de limpiarlo
+
+    @Transactional
     @PostMapping("/confirmar/{idCliente}")
     public Recibo generarRecibo(@PathVariable Long idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente)
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+
+        if (!cliente.getActivo()) {
+            throw new RuntimeException("El cliente no está activo");
+        }
+
         List<OrdenDePago> ordenes = carritoReciboService.obtenerCarrito();
         List<CarritoReciboDTO> consultas = carritoReciboService.obtenerConsultas();
 
@@ -57,12 +74,20 @@ public class CarritoReciboController {
         Recibo nuevoRecibo = reciboService.crearRecibo(ordenes, idCliente);
 
         for (OrdenDePago orden : ordenes) {
-            reciboService.vincularOrdenARecibo(nuevoRecibo.getIdRecibo(), orden.getIdOrden());
+            for (ProductoOrden productoOrden : orden.getProductos()) {
+                if (productoOrden.isStockDescontado()) {
+                    continue;
+                }
+                productoOrden.setStockDescontado(true);
+                productoService.guardarProducto(productoOrden.getProducto());
+                ordenDePagoService.cancelarLiberacionStock(productoOrden);
+            }
         }
 
-        carritoReciboService.limpiarCarrito(); // Limpia órdenes y consultas
+        carritoReciboService.limpiarCarrito();
         return nuevoRecibo;
     }
+
 
     @PostMapping("/agregar-consulta")
     public void agregarConsulta(@RequestParam double precioTotal) {

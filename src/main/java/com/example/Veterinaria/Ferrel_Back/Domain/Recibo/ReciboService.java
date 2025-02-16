@@ -28,9 +28,14 @@ public class ReciboService {
 
     @Transactional
     public Recibo crearRecibo(List<OrdenDePago> ordenes, Long idCliente) {
+
+        if (idCliente == null) {
+            throw new IllegalArgumentException("El ID del cliente no puede ser nulo");
+        }
+
         Recibo recibo = new Recibo();
         recibo.setFechaHoraRegistro(LocalDateTime.now(ZoneId.of("America/Lima")));
-
+        recibo.setIdCliente((long) idCliente.intValue());
 
 
         BigDecimal totalOrdenes = ordenes.stream()
