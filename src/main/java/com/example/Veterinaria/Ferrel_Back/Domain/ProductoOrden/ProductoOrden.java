@@ -35,6 +35,10 @@ public class ProductoOrden {
     private Producto producto;
 
     private String tipo = "Producto";
+    @Setter
+    @Getter
+    @Transient
+    private boolean stockDescontado = false;
 
     // solo para devolver el id_producto en JSON correctamente
     @JsonProperty("id_producto")
@@ -52,5 +56,6 @@ public class ProductoOrden {
         this.subtotal = this.precioUnitario * this.cantidad;
         this.tipo = "Producto";
     }
+
 
 }

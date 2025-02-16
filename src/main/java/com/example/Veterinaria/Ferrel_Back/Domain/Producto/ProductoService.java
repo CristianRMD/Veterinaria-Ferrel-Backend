@@ -22,8 +22,16 @@ public class ProductoService {
     }
 
 
+
     public Producto obtenerPorId(Integer idProducto) {
-        return productoRepository.findById(idProducto).get();
+        return productoRepository.findById(idProducto)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado : c"));
+    }
+
+
+
+    public Producto guardarProducto(Producto producto) {
+        return productoRepository.save(producto);
     }
 
 

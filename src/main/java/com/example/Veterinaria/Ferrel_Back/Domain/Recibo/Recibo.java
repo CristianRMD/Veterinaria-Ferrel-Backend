@@ -22,7 +22,7 @@ public class Recibo {
     private Long idRecibo;
 
     @Column(name = "id_cliente", nullable = false)
-    private Integer idCliente;
+    private Long  idCliente;
 
     @Column(name = "monto_total", nullable = false)
     private Double montoTotal;
@@ -31,7 +31,7 @@ public class Recibo {
     private LocalDateTime fechaHoraRegistro;
 
 
-    public Recibo(int id_cliente, double monto_total) {
+    public Recibo(long id_cliente, double monto_total) {
         this.idCliente = id_cliente;
         this.montoTotal = monto_total;
         this.fechaHoraRegistro = LocalDateTime.now();

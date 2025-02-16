@@ -18,9 +18,32 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_producto;
+
     private String nombre;
     private float precio_unitario;
     private int stock;
 
+
+    public synchronized boolean reducirStock(int cantidad) {
+        if (stock >= cantidad) {
+            this.stock -= cantidad;
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized void restaurarStock(int cantidad) {
+        this.stock += cantidad;
+    }
+
+    public synchronized void confirmarCompra(int cantidad) {
+        if (this.stock >= cantidad) {
+            this.stock -= cantidad;
+        }
+    }
+
+    public synchronized void liberarStock(int cantidad) {
+        this.restaurarStock(cantidad);
+    }
 
 }
