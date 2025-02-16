@@ -36,7 +36,7 @@ public class ClienteController {
     @GetMapping("/details")
     public ResponseEntity<Page<DatosListadoCliente>> listaClientes(Pageable paginacion){
 
-       return ResponseEntity.ok(clienteRepository.findAll(paginacion).map(DatosListadoCliente::new));
+       return ResponseEntity.ok(clienteRepository.findByActivoTrue(paginacion).map(DatosListadoCliente::new));
     }
     @DeleteMapping("/{id}")
     @Transactional
