@@ -55,6 +55,9 @@ public Cliente (DatosRegistroCliente datosRegistroCliente){
     if (datosActualizarCliente.email()!=null){
         this.email=datosActualizarCliente.email();
     }
+    if (datosActualizarCliente.telefono()!=null){
+        this.telefono=datosActualizarCliente.telefono();
+    }
 
 
     }
