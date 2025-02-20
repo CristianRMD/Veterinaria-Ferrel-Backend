@@ -18,7 +18,7 @@ public class MascotaService {
     private ClienteRepository clienteRepository;
 
     public List<DatosListadoMascota> listarMascotas() {
-        return mascotaRepository.findAll()
+        return mascotaRepository.findByClienteActivoTrue()
                 .stream()
                 .map(DatosListadoMascota::new)
                 .collect(Collectors.toList());

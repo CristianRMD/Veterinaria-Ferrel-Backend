@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface MascotaRepository extends JpaRepository<Mascota, Long> {
     List<Mascota> findByCliente_Dni(Long dni);
+    List<Mascota> findByClienteActivoTrue();
 }
 
