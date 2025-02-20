@@ -32,8 +32,9 @@ public Cliente (DatosRegistroCliente datosRegistroCliente){
     this.nombre = datosRegistroCliente.nombre();
     this.apellido =datosRegistroCliente.apellido();
     this.direccion=datosRegistroCliente.direccion();
-    this.telefono=datosRegistroCliente.direccion();
+    this.telefono=datosRegistroCliente.telefono();
     this.email=datosRegistroCliente.email();
+    this.dni=datosRegistroCliente.dni();
     this.activo=true;
 }
 

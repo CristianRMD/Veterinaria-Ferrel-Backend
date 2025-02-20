@@ -1,5 +1,6 @@
 package com.example.Veterinaria.Ferrel_Back.Controller;
 
+import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.EstadoOrden;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenDePago;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenPagoRepository;
 import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.ValidarPagosService;
@@ -25,6 +26,28 @@ public class ValidarPagoController {
     public ResponseEntity<Boolean> validarDocumento(@PathVariable String documento) {
         return ResponseEntity.ok(RegistrarPagosService.validarDocumento(documento));
     }
+
+
+    @PostMapping("/confirmar-pago/{idOrden}")
+    public ResponseEntity<String> confirmarPago(@PathVariable Long idOrden) {
+        OrdenDePago orden = OrdenPagoRepository.findById(idOrden).orElse(null);
+
+        if (orden == null) {
+            return ResponseEntity.badRequest().body("Orden no encontrada");
+        }
+
+        if (!orden.getEstado().equals(EstadoOrden.PENDIENTE)) {
+            return ResponseEntity.badRequest().body("La orden ya ha sido procesada...");
+        }
+
+        orden.setEstado(EstadoOrden.PAGADO);
+        OrdenPagoRepository.save(orden);
+
+        return ResponseEntity.ok("Pago confirmado correctamente");
+    }
+
+
+
 
 
     // verificar si el id_orden_compra existe manejar el flujo para agregarlo dentro de un carrito temporal y quitarlo de este carrito temporal

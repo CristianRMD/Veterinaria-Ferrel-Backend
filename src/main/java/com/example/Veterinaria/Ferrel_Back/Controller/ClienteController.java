@@ -23,9 +23,9 @@ public class ClienteController {
     @PostMapping("/register")
     public ResponseEntity <DatosRespuestaCliente> RegistrarCliente(@RequestBody @Valid DatosRegistroCliente datosRegistroCliente
     , UriComponentsBuilder uriComponentsBuilder){
-
+        System.out.println(datosRegistroCliente.dni());
     Cliente cliente = clienteRepository.save(new Cliente(datosRegistroCliente));
-
+        System.out.println(cliente);
     DatosRespuestaCliente datosRespuestaCliente = new DatosRespuestaCliente(cliente.getId(),cliente.getNombre(),cliente.getApellido(),cliente.getDni());
         URI url =uriComponentsBuilder.path("/cliente/{id}").buildAndExpand(cliente.getId()).toUri();
 
@@ -36,7 +36,7 @@ public class ClienteController {
     @GetMapping("/details")
     public ResponseEntity<Page<DatosListadoCliente>> listaClientes(Pageable paginacion){
 
-       return ResponseEntity.ok(clienteRepository.findAll(paginacion).map(DatosListadoCliente::new));
+       return ResponseEntity.ok(clienteRepository.findByActivoTrue(paginacion).map(DatosListadoCliente::new));
     }
     @DeleteMapping("/{id}")
     @Transactional
@@ -45,10 +45,10 @@ public class ClienteController {
     cliente.desacticarCliente();
         return ResponseEntity.noContent().build();
     }
-    @PutMapping("/edit")
+    @PutMapping("/edit/{id}")
     @Transactional
-    public ResponseEntity<DatosRespuestaCliente> actualizarCliente (@PathVariable @Valid DatosActualizarCliente datosActualizarCliente){
-    var cliente = clienteRepository.getReferenceById(datosActualizarCliente.id());
+    public ResponseEntity<DatosRespuestaCliente> actualizarCliente (@PathVariable Long id ,@RequestBody @Valid DatosActualizarCliente datosActualizarCliente){
+    var cliente = clienteRepository.getReferenceById(id);
        cliente.actualizarDatos(datosActualizarCliente);
        var datosRespuestaCliente = new DatosRespuestaCliente(cliente);
     return ResponseEntity.ok(datosRespuestaCliente);

@@ -1,5 +1,7 @@
+
 package com.example.Veterinaria.Ferrel_Back.Controller;
 
+import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.EstadoOrden;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenDePago;
 import com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.OrdenPagoService;
 import com.example.Veterinaria.Ferrel_Back.Domain.Producto.Producto;
@@ -35,11 +37,26 @@ public class OrdenDePagoController {
             return "Producto no encontrado :c";
         }
 
+        for (ProductoOrden pOrden : carrito) {
+            if (pOrden.getProducto().getId_producto() == idProducto) {
+                return "Este producto ya está en el carrito";
+            }
+        }
+
+        if (!producto.reducirStock(cantidad)) {
+            return "No hay suficiente stock disponible para " + producto.getNombre();
+        }
+
+        productoService.guardarProducto(producto);
         ProductoOrden productoOrden = new ProductoOrden(producto, cantidad);
+        productoOrden.setStockDescontado(true);
         carrito.add(productoOrden);
 
-        return "Producto agregado: " + producto.getNombre() + ", Cantidad: " + cantidad;
+        ordenPagoService.programarLiberacionStock(productoOrden, 15);
+
+        return "Producto reservado: " + producto.getNombre() + ", Cantidad: " + cantidad;
     }
+
 
     // trae todos los productos seleccionados
 
@@ -70,9 +87,36 @@ public class OrdenDePagoController {
         }
 
         OrdenDePago orden = ordenPagoService.crearOrdenPago(carrito);
-        carrito.clear();
 
+        List<ProductoOrden> productos = new ArrayList<>(orden.getProductos()); // Cargar antes de usar
+
+        for (ProductoOrden productoOrden : productos) {
+            //productoOrden.getProducto().confirmarCompra(productoOrden.getCantidad());
+            productoService.guardarProducto(productoOrden.getProducto());
+            ordenPagoService.cancelarLiberacionStock(productoOrden);
+        }
+
+
+        orden.setEstado(EstadoOrden.PENDIENTE);
+        ordenPagoService.guardarOrden(orden);
+        carrito.clear();
         return orden;
+    }
+
+    // endpoint para cancelar la orden de pago manualmente -> en carrito estara para que se haga de forma automatica (15 min)
+    // se debe de cancelar antes de confirmar sino muere
+    @PostMapping("/cancelar")
+    public String cancelarOrden() {
+        for (ProductoOrden productoOrden : carrito) {
+            if (productoOrden.isStockDescontado()) {
+                productoOrden.getProducto().restaurarStock(productoOrden.getCantidad());
+                productoOrden.setStockDescontado(false);
+                productoService.guardarProducto(productoOrden.getProducto());
+            }
+            ordenPagoService.cancelarLiberacionStock(productoOrden);
+        }
+        carrito.clear();
+        return "Orden cancelada, stock restaurado";
     }
 
 
