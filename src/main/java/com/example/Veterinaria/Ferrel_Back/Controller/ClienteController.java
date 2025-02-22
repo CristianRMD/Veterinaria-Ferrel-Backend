@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cliente")
@@ -34,10 +36,15 @@ public class ClienteController {
 
 
     @GetMapping("/details")
-    public ResponseEntity<Page<DatosListadoCliente>> listaClientes(Pageable paginacion){
-
-       return ResponseEntity.ok(clienteRepository.findByActivoTrue(paginacion).map(DatosListadoCliente::new));
+    public ResponseEntity<List<DatosListadoCliente>> listaClientes() {
+        List<DatosListadoCliente> clientes = clienteRepository.findByActivoTrue()
+                .stream()
+                .map(DatosListadoCliente::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientes);
     }
+
+
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<DatosRespuestaCliente> eliminarCliente (@PathVariable Long id){
@@ -62,12 +69,6 @@ public class ClienteController {
         return ResponseEntity.ok(datosRespuestaCliente);
     }
 
-@GetMapping("/mascotas/{dni}")
-    public ResponseEntity retornarListaMascotas(){
-        //paginado de mascotas del respectivo usuario
-
-        return null;
-}
 
 
 }
