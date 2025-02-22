@@ -25,9 +25,13 @@ public class ClienteController {
     @PostMapping("/register")
     public ResponseEntity <DatosRespuestaCliente> RegistrarCliente(@RequestBody @Valid DatosRegistroCliente datosRegistroCliente
     , UriComponentsBuilder uriComponentsBuilder){
-        System.out.println(datosRegistroCliente.dni());
+
+        if (clienteRepository.existsByDni(datosRegistroCliente.dni())) {
+            return ResponseEntity.badRequest().body(null); // Puedes personalizar el mensaje de error
+        }
+
     Cliente cliente = clienteRepository.save(new Cliente(datosRegistroCliente));
-        System.out.println(cliente);
+
     DatosRespuestaCliente datosRespuestaCliente = new DatosRespuestaCliente(cliente.getId(),cliente.getNombre(),cliente.getApellido(),cliente.getDni());
         URI url =uriComponentsBuilder.path("/cliente/{id}").buildAndExpand(cliente.getId()).toUri();
 
