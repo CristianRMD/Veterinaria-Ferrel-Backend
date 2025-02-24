@@ -3,7 +3,9 @@ import com.example.Veterinaria.Ferrel_Back.Domain.mascota.Mascota;
 import com.example.Veterinaria.Ferrel_Back.Domain.mascota.MascotaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -39,7 +41,9 @@ public class HistorialMedicoService {
     @Transactional
     public DatosListadoHistorial registrarHistorial(Long id, DatosRegistrarHistorial datos) {
         Mascota mascota = mascotaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Mascota no encontrada"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Mascota no registrada"
+                ));
 
         HistorialMedico historial = new HistorialMedico();
         historial.setMascota(mascota);
