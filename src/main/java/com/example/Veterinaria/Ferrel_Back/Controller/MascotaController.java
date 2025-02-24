@@ -1,18 +1,15 @@
 package com.example.Veterinaria.Ferrel_Back.Controller;
 
-import com.example.Veterinaria.Ferrel_Back.Domain.historialMedico.HistorialMedicoService;
 import com.example.Veterinaria.Ferrel_Back.Domain.mascota.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mascota")
+@RequestMapping("/mascotas")
 public class MascotaController {
 
     @Autowired
@@ -25,7 +22,7 @@ public class MascotaController {
     @PostMapping("/register")
     public ResponseEntity<DatosRespuestaMascota> registrarMascota(@RequestBody @Valid DatosRegistroMascota datosRegistroMascota) {
         DatosRespuestaMascota mascota = mascotaService.agregarMascota(datosRegistroMascota);
-        return ResponseEntity.ok(mascota); // Solo devuelve el objeto sin la URL de ubicación
+        return ResponseEntity.ok(mascota);
     }
 
     @GetMapping("/list")
@@ -33,13 +30,12 @@ public class MascotaController {
         return ResponseEntity.ok(mascotaService.listarMascotas());
     }
 
-    @GetMapping("/cliente/{dni}")
+    @GetMapping("/search/{dni}")
     public ResponseEntity<DatosMascotasPorCliente> listarMascotasPorCliente(@PathVariable Long dni) {
         return ResponseEntity.ok(mascotaService.listarMascotasPorDNI(dni));
     }
 
-
-    @GetMapping("/{id}")
+    @GetMapping("/details/{id}")
     public ResponseEntity<DatosRespuestaMascota> retornarDatosMascota(@PathVariable Long id) {
         return ResponseEntity.ok(mascotaService.obtenerMascotaPorId(id));
     }
@@ -50,9 +46,8 @@ public class MascotaController {
         return ResponseEntity.ok(mascotaService.actualizarMascota(id, datosActualizarMascota));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarMascota(@PathVariable Long id) {
-        mascotaService.eliminarMascota(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<DatosRespuestaMascota> eliminarMascota(@PathVariable Long id) {
+        return ResponseEntity.ok(mascotaService.eliminarMascota(id));
     }
 }

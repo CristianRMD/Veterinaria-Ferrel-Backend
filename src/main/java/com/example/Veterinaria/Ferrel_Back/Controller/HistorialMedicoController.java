@@ -5,10 +5,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
-@RequestMapping("/historiales")
+@RequestMapping("/historial")
 @CrossOrigin(origins = "*") // Permite peticiones desde cualquier origen (para frontend)
 public class HistorialMedicoController {
 
@@ -24,27 +23,26 @@ public class HistorialMedicoController {
         return ResponseEntity.ok(respuesta);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/search/{id}")
     public ResponseEntity<DatosListadoHistorial> obtenerHistorialPorId(@PathVariable Integer id) {
         DatosListadoHistorial historial = historialMedicoService.obtenerHistorialPorId(id);
         return ResponseEntity.ok(historial);
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<String> registrarHistorial(@PathVariable Long id, @RequestBody @Valid DatosRegistrarHistorial datos) {
-        historialMedicoService.registrarHistorial(id, datos);
-        return ResponseEntity.ok("Historial médico registrado con éxito");
+    @PostMapping("/register/{id}")
+    public ResponseEntity<DatosListadoHistorial> registrarHistorial(@PathVariable Long id, @RequestBody @Valid DatosRegistrarHistorial datos) {
+        DatosListadoHistorial historia = historialMedicoService.registrarHistorial(id, datos);
+        return ResponseEntity.ok(historia);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> actualizarHistorial(@PathVariable int id, @RequestBody @Valid DatosActualizarHistorial datos) {
-        historialMedicoService.actualizarHistorial(id, datos);
-        return ResponseEntity.ok("Historial médico actualizado correctamente");
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<DatosListadoHistorial> actualizarHistorial(@PathVariable int id, @RequestBody @Valid DatosActualizarHistorial datos) {
+        return ResponseEntity.ok(historialMedicoService.actualizarHistorial(id, datos));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarHistorial(@PathVariable int id) {
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> eliminarHistorial(@PathVariable int id) {
         historialMedicoService.eliminarHistorial(id);
-        return ResponseEntity.ok("Historial médico eliminado correctamente");
+        return ResponseEntity.noContent().build();
     }
 }

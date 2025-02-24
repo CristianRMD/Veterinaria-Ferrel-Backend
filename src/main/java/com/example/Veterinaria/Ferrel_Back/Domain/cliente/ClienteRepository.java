@@ -15,9 +15,8 @@ public interface ClienteRepository extends JpaRepository<Cliente,Long>{
     // busqueda de clientes por dni
     Optional<Cliente> findByDni(Long dni);
 
-    // busqueda de cliente por id
-
-    Optional<Cliente> findById(int idCliente);
+    // busqueda por dni y activo, necesario en mascota
+    Optional<Cliente> findByDniAndActivoTrue(Long dni);
 
     boolean existsByDni(@NotNull Long dni);
 }
