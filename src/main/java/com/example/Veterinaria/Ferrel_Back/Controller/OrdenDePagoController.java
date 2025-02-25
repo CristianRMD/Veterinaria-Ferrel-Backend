@@ -119,11 +119,11 @@ public class OrdenDePagoController {
         return "Orden cancelada, stock restaurado";
     }
 
-
-    // lista todas las ordenes existentes
-    @GetMapping
-    public List<OrdenDePago> listarOrdenes() {
-        return ordenPagoService.obtenerOrdenes();
+    @GetMapping("/pendientes")
+    public List<OrdenDePago> listarOrdenesPendientes() {
+        return ordenPagoService.obtenerOrdenesPendientes();
     }
+
+
 
 }
