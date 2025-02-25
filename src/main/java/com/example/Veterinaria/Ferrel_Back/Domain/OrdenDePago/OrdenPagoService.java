@@ -67,7 +67,7 @@ public class OrdenPagoService {
         for (ProductoOrden po : productosOrden) {
             Producto producto = po.getProducto();
 
-            // Verificar si el stock ya fue descontado previamente
+            // verificar si el stock ya fue descontado previamente
             if (!po.isStockDescontado()) {
                 if (!producto.reducirStock(po.getCantidad())) {
                     throw new IllegalStateException("No hay suficiente stock para el producto: " + producto.getNombre());
@@ -83,17 +83,8 @@ public class OrdenPagoService {
     }
 
 
-    // un poco renundante pero por facilismo lo coloco (OBS - 3er semanaFEB//2025)
     public void guardarOrden(OrdenDePago orden) {
         ordenPagoRepository.save(orden);
-    }
-
-    public OrdenDePago obtenerOrdenConProductos(Long id) {
-        OrdenDePago orden = ordenPagoRepository.findById(id).orElse(null);
-        if (orden != null) {
-            Hibernate.initialize(orden.getProductos());
-        }
-        return orden;
     }
 
     public List<OrdenDePago> obtenerOrdenes() {
@@ -101,10 +92,16 @@ public class OrdenPagoService {
     }
 
 
-    // crear metodo para obtener por id
-
     public OrdenDePago obtenerPorId(Long idOrden) {
         return ordenPagoRepository.findById(idOrden)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
     }
+
+
+    public List<OrdenDePago> obtenerOrdenesPendientes() {
+        return ordenPagoRepository.findByEstado(EstadoOrden.PENDIENTE);
+    }
+
+
+
 }

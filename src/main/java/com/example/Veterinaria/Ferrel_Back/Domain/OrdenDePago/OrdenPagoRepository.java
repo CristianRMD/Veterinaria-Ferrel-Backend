@@ -16,4 +16,9 @@ public interface OrdenPagoRepository extends JpaRepository<OrdenDePago, Long>{
     Optional<OrdenDePago> findById(Long idOrden);
 
     List<OrdenDePago> findByEstadoAndFechaExpiracionBefore(EstadoOrden estado, LocalDateTime fechaExpiracion);
+    List<OrdenDePago> findByEstado(EstadoOrden estado);
+
+
+
+
 }

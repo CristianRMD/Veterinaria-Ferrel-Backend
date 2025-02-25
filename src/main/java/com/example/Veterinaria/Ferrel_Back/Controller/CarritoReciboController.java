@@ -11,6 +11,8 @@ import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.ReciboService;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.Cliente;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.ClienteRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,13 +41,17 @@ public class CarritoReciboController {
     }
 
     @PostMapping("/agregar/{idOrden}")
-    public void agregarOrden(@PathVariable Long idOrden) {
+    public ResponseEntity<String> agregarOrden(@PathVariable Long idOrden) {
         OrdenDePago orden = ordenDePagoService.obtenerPorId(idOrden);
 
         if (orden != null) {
             carritoReciboService.agregarOrden(orden);
+            return ResponseEntity.ok("Orden de pago agregada correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orden de pago no encontrada :c");
         }
     }
+
 
     @DeleteMapping("/quitar/{idOrden}")
     public void quitarOrden(@PathVariable Long idOrden) {
