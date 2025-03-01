@@ -51,13 +51,19 @@ public class CarritoReciboService {
         carrito.removeIf(o -> o.getIdOrden().equals(idOrden));
     }
 
-    public void agregarConsulta(double precioTotal) {
-        consultasCarrito.add(new CarritoReciboDTO("Servicio", "Consulta", 1, precioTotal));
+    public int agregarConsulta(double precioTotal) {
+        CarritoReciboDTO consulta = new CarritoReciboDTO("Servicio", "Consulta", 1, precioTotal);
+        consultasCarrito.add(consulta);
+        return consultasCarrito.size() - 1; // devuelve el indice de la consulta agregada para saber cual eliminar
     }
 
-    public void quitarConsulta() {
-        consultasCarrito.clear(); // quita una consulta a la vez
+
+    public void quitarConsulta(int index) {
+        if (index >= 0 && index < consultasCarrito.size()) {
+            consultasCarrito.remove(index);
+        }
     }
+
 
     public void limpiarCarrito() {
         carrito.clear();
