@@ -53,10 +53,16 @@ public class CarritoReciboController {
     }
 
 
-    @DeleteMapping("/quitar/{idOrden}")
-    public void quitarOrden(@PathVariable Long idOrden) {
-        carritoReciboService.quitarOrden(idOrden);
+    @DeleteMapping("/vaciar")
+    public ResponseEntity<String> vaciarCarrito() {
+        if (carritoReciboService.estaVacio()) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("El carrito ya esta vacio");
+        }
+
+        carritoReciboService.limpiarCarrito();
+        return ResponseEntity.ok("Carrito vaciado ...");
     }
+
 
 
     // para el caso de clientes no registrado usamos:
