@@ -70,6 +70,11 @@ public class CarritoReciboService {
         consultasCarrito.clear();
     }
 
+    public boolean estaVacio() {
+        return carrito.isEmpty() && consultasCarrito.isEmpty();
+    }
+
+
     public List<OrdenDePago> obtenerCarrito() {
         return carrito;
     }
