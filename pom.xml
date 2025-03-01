@@ -13,6 +13,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Veterinaria-Ferrel-Back</name>
 	<description>Demo project for Spring Boot</description>
+	<repositories>
+		<repository>
+			<id>itext</id>
+			<url>https://repo.itextsupport.com/releases</url>
+		</repository>
+	</repositories>
+
 	<url/>
 	<licenses>
 		<license/>
@@ -34,6 +41,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -101,6 +109,29 @@
 			<version>2.8.4</version>
 
 		</dependency>
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext7-core</artifactId>
+			<version>7.1.16</version>
+		</dependency>
+
+		<!-- Dependencia para agregar imágenes (logos) -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>layout</artifactId>
+			<version>7.2.5</version>
+		</dependency>
+
+
+		<!-- Dependencia para usar plantillas HTML y CSS en PDF -->
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>html2pdf</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+
+
 
 	</dependencies>
 
