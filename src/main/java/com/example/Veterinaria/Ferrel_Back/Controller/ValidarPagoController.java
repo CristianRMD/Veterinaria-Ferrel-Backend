@@ -28,23 +28,23 @@ public class ValidarPagoController {
     }
 
 
-    @PostMapping("/confirmar-pago/{idOrden}")
-    public ResponseEntity<String> confirmarPago(@PathVariable Long idOrden) {
-        OrdenDePago orden = OrdenPagoRepository.findById(idOrden).orElse(null);
-
-        if (orden == null) {
-            return ResponseEntity.badRequest().body("Orden no encontrada");
-        }
-
-        if (!orden.getEstado().equals(EstadoOrden.PENDIENTE)) {
-            return ResponseEntity.badRequest().body("La orden ya ha sido procesada...");
-        }
-
-        orden.setEstado(EstadoOrden.PAGADO);
-        OrdenPagoRepository.save(orden);
-
-        return ResponseEntity.ok("Pago confirmado correctamente");
-    }
+//    @PostMapping("/confirmar-pago/{idOrden}")
+//    public ResponseEntity<String> confirmarPago(@PathVariable Long idOrden) {
+//        OrdenDePago orden = OrdenPagoRepository.findById(idOrden).orElse(null);
+//
+//        if (orden == null) {
+//            return ResponseEntity.badRequest().body("Orden no encontrada");
+//        }
+//
+//        if (!orden.getEstado().equals(EstadoOrden.PENDIENTE)) {
+//            return ResponseEntity.badRequest().body("La orden ya ha sido procesada...");
+//        }
+//
+//        orden.setEstado(EstadoOrden.PAGADO);
+//        OrdenPagoRepository.save(orden);
+//
+//        return ResponseEntity.ok("Pago confirmado correctamente");
+//    }
 
 
 
