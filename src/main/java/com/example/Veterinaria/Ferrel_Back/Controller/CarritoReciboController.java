@@ -59,25 +59,29 @@ public class CarritoReciboController {
     }
 
 
-
+    // para el caso de clientes no registrado usamos:
+    // http://localhost:8080/carrito/confirmar/0
     @Transactional
     @PostMapping("/confirmar/{idCliente}")
-    public Recibo generarRecibo(@PathVariable Long idCliente) {
-        Cliente cliente = clienteRepository.findById(idCliente)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    public Recibo generarRecibo(@PathVariable(required = false) Long idCliente) {
+        Cliente cliente = null;
 
-        if (!cliente.getActivo()) {
-            throw new RuntimeException("El cliente no está activo");
+        if (idCliente != null && idCliente > 0) {
+            cliente = clienteRepository.findById(idCliente).orElse(null);
+
+            if (cliente != null && !cliente.getActivo()) {
+                throw new RuntimeException("Cliente NO encontrado :C");
+            }
         }
 
         List<OrdenDePago> ordenes = carritoReciboService.obtenerCarrito();
         List<CarritoReciboDTO> consultas = carritoReciboService.obtenerConsultas();
 
         if (ordenes.isEmpty() && consultas.isEmpty()) {
-            throw new RuntimeException("Carrito vacío");
+            throw new RuntimeException("Carrito vacio");
         }
 
-        Recibo nuevoRecibo = reciboService.crearRecibo(ordenes, idCliente);
+        Recibo nuevoRecibo = reciboService.crearRecibo(ordenes, cliente != null ? cliente.getId() : null);
 
         for (OrdenDePago orden : ordenes) {
             for (ProductoOrden productoOrden : orden.getProductos()) {
@@ -95,15 +99,17 @@ public class CarritoReciboController {
     }
 
 
-    @PostMapping("/agregar-consulta")
-    public void agregarConsulta(@RequestParam double precioTotal) {
-        carritoReciboService.agregarConsulta(precioTotal);
+
+    @PostMapping("/agregar-consulta/{precioTotal}")
+    public int agregarConsulta(@PathVariable double precioTotal) {
+        return carritoReciboService.agregarConsulta(precioTotal);
     }
 
-    @DeleteMapping("/quitar-consulta")
-    public void quitarConsulta() {
-        carritoReciboService.quitarConsulta();
+    @DeleteMapping("/quitar-consulta/{index}")
+    public void quitarConsulta(@PathVariable int index) {
+        carritoReciboService.quitarConsulta(index);
     }
+
 
 
 }
