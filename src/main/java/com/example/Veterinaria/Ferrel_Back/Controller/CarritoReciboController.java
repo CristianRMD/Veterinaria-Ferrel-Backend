@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.EstadoOrden.PAGADO;
+
 @RestController
 @RequestMapping("/carrito")
 public class CarritoReciboController {
@@ -90,6 +92,9 @@ public class CarritoReciboController {
         Recibo nuevoRecibo = reciboService.crearRecibo(ordenes, cliente != null ? cliente.getId() : null);
 
         for (OrdenDePago orden : ordenes) {
+            orden.setEstado(PAGADO);
+            ordenDePagoService.guardarOrden(orden);
+
             for (ProductoOrden productoOrden : orden.getProductos()) {
                 if (productoOrden.isStockDescontado()) {
                     continue;
@@ -103,6 +108,7 @@ public class CarritoReciboController {
         carritoReciboService.limpiarCarrito();
         return nuevoRecibo;
     }
+
 
 
 
