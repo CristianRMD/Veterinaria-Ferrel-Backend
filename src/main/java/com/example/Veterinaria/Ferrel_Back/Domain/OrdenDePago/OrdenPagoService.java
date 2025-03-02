@@ -5,7 +5,6 @@ import com.example.Veterinaria.Ferrel_Back.Domain.Producto.ProductoService;
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrden;
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrdenRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,6 +80,30 @@ public class OrdenPagoService {
         orden.setProductos(new ArrayList<>(productosOrden));
         return ordenPagoRepository.save(orden);
     }
+
+    @Transactional
+    public void expirarOrden(Long idOrden) {
+        OrdenDePago orden = ordenPagoRepository.findById(idOrden)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        if (orden.getEstado() != EstadoOrden.PENDIENTE) {
+            throw new RuntimeException("Solo se pueden expirar ordenes en estado PENDIENTE");
+        }
+
+        // Restaurar el stock de los productos asociados
+        for (ProductoOrden productoOrden : orden.getProductos()) {
+            if (productoOrden.isStockDescontado()) {
+                productoOrden.getProducto().restaurarStock(productoOrden.getCantidad());
+                productoOrden.setStockDescontado(false);
+                productoService.guardarProducto(productoOrden.getProducto());
+            }
+        }
+
+        // Cambiar estado a EXPIRADO y guardar
+        orden.setEstado(EstadoOrden.EXPIRADO);
+        ordenPagoRepository.save(orden);
+    }
+
 
 
     public void guardarOrden(OrdenDePago orden) {

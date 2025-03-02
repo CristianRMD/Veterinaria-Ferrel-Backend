@@ -25,7 +25,7 @@ public class ExpiracionOrdenWorker {
                 EstadoOrden.PENDIENTE, LocalDateTime.now());
 
         for (OrdenDePago orden : ordenesExpiradas) {
-            orden.setEstado(EstadoOrden.CANCELADO);
+            orden.setEstado(EstadoOrden.EXPIRADO);
 
             for (ProductoOrden productoOrden : orden.getProductos()) {
                 Producto producto = productoOrden.getProducto();
