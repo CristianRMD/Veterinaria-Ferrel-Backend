@@ -5,7 +5,6 @@ import com.example.Veterinaria.Ferrel_Back.Domain.Producto.ProductoService;
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrden;
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrdenRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +66,7 @@ public class OrdenPagoService {
         for (ProductoOrden po : productosOrden) {
             Producto producto = po.getProducto();
 
-            // Verificar si el stock ya fue descontado previamente
+            // verificar si el stock ya fue descontado previamente
             if (!po.isStockDescontado()) {
                 if (!producto.reducirStock(po.getCantidad())) {
                     throw new IllegalStateException("No hay suficiente stock para el producto: " + producto.getNombre());
@@ -82,18 +81,33 @@ public class OrdenPagoService {
         return ordenPagoRepository.save(orden);
     }
 
+    @Transactional
+    public void expirarOrden(Long idOrden) {
+        OrdenDePago orden = ordenPagoRepository.findById(idOrden)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-    // un poco renundante pero por facilismo lo coloco (OBS - 3er semanaFEB//2025)
-    public void guardarOrden(OrdenDePago orden) {
+        if (orden.getEstado() != EstadoOrden.PENDIENTE) {
+            throw new RuntimeException("Solo se pueden expirar ordenes en estado PENDIENTE");
+        }
+
+        // Restaurar el stock de los productos asociados
+        for (ProductoOrden productoOrden : orden.getProductos()) {
+            if (productoOrden.isStockDescontado()) {
+                productoOrden.getProducto().restaurarStock(productoOrden.getCantidad());
+                productoOrden.setStockDescontado(false);
+                productoService.guardarProducto(productoOrden.getProducto());
+            }
+        }
+
+        // Cambiar estado a EXPIRADO y guardar
+        orden.setEstado(EstadoOrden.EXPIRADO);
         ordenPagoRepository.save(orden);
     }
 
-    public OrdenDePago obtenerOrdenConProductos(Long id) {
-        OrdenDePago orden = ordenPagoRepository.findById(id).orElse(null);
-        if (orden != null) {
-            Hibernate.initialize(orden.getProductos());
-        }
-        return orden;
+
+
+    public void guardarOrden(OrdenDePago orden) {
+        ordenPagoRepository.save(orden);
     }
 
     public List<OrdenDePago> obtenerOrdenes() {
@@ -101,10 +115,16 @@ public class OrdenPagoService {
     }
 
 
-    // crear metodo para obtener por id
-
     public OrdenDePago obtenerPorId(Long idOrden) {
         return ordenPagoRepository.findById(idOrden)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
     }
+
+
+    public List<OrdenDePago> obtenerOrdenesPendientes() {
+        return ordenPagoRepository.findByEstado(EstadoOrden.PENDIENTE);
+    }
+
+
+
 }

@@ -9,6 +9,8 @@ import com.example.Veterinaria.Ferrel_Back.Domain.Producto.ProductoService;
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrden;
 import com.example.Veterinaria.Ferrel_Back.Domain.ProductoOrden.ProductoOrdenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -119,11 +121,22 @@ public class OrdenDePagoController {
         return "Orden cancelada, stock restaurado";
     }
 
-
-    // lista todas las ordenes existentes
-    @GetMapping
-    public List<OrdenDePago> listarOrdenes() {
-        return ordenPagoService.obtenerOrdenes();
+    @GetMapping("/pendientes")
+    public List<OrdenDePago> listarOrdenesPendientes() {
+        return ordenPagoService.obtenerOrdenesPendientes();
     }
+
+
+
+    @PostMapping("/expirar/{idOrden}")
+    public ResponseEntity<String> expirarOrden(@PathVariable Long idOrden) {
+        try {
+            ordenPagoService.expirarOrden(idOrden);
+            return ResponseEntity.ok("La orden de pago " + idOrden + " ha sido marcada como EXPIRADA");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
 
 }

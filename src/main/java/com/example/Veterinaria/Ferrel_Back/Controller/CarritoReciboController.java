@@ -11,9 +11,13 @@ import com.example.Veterinaria.Ferrel_Back.Domain.Recibo.ReciboService;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.Cliente;
 import com.example.Veterinaria.Ferrel_Back.Domain.cliente.ClienteRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.example.Veterinaria.Ferrel_Back.Domain.OrdenDePago.EstadoOrden.PAGADO;
 
 @RestController
 @RequestMapping("/carrito")
@@ -39,41 +43,58 @@ public class CarritoReciboController {
     }
 
     @PostMapping("/agregar/{idOrden}")
-    public void agregarOrden(@PathVariable Long idOrden) {
+    public ResponseEntity<String> agregarOrden(@PathVariable Long idOrden) {
         OrdenDePago orden = ordenDePagoService.obtenerPorId(idOrden);
 
         if (orden != null) {
             carritoReciboService.agregarOrden(orden);
+            return ResponseEntity.ok("Orden de pago agregada correctamente");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orden de pago no encontrada :c");
         }
     }
 
-    @DeleteMapping("/quitar/{idOrden}")
-    public void quitarOrden(@PathVariable Long idOrden) {
-        carritoReciboService.quitarOrden(idOrden);
+
+    @DeleteMapping("/vaciar")
+    public ResponseEntity<String> vaciarCarrito() {
+        if (carritoReciboService.estaVacio()) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("El carrito ya esta vacio");
+        }
+
+        carritoReciboService.limpiarCarrito();
+        return ResponseEntity.ok("Carrito vaciado ...");
     }
 
 
 
+    // para el caso de clientes no registrado usamos:
+    // http://localhost:8080/carrito/confirmar/0
     @Transactional
     @PostMapping("/confirmar/{idCliente}")
-    public Recibo generarRecibo(@PathVariable Long idCliente) {
-        Cliente cliente = clienteRepository.findById(idCliente)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    public Recibo generarRecibo(@PathVariable(required = false) Long idCliente) {
+        Cliente cliente = null;
 
-        if (!cliente.getActivo()) {
-            throw new RuntimeException("El cliente no está activo");
+        if (idCliente != null && idCliente > 0) {
+            cliente = clienteRepository.findById(idCliente).orElse(null);
+
+            if (cliente != null && !cliente.getActivo()) {
+                throw new RuntimeException("Cliente NO encontrado :C");
+            }
         }
 
         List<OrdenDePago> ordenes = carritoReciboService.obtenerCarrito();
         List<CarritoReciboDTO> consultas = carritoReciboService.obtenerConsultas();
 
         if (ordenes.isEmpty() && consultas.isEmpty()) {
-            throw new RuntimeException("Carrito vacío");
+            throw new RuntimeException("Carrito vacio");
         }
 
-        Recibo nuevoRecibo = reciboService.crearRecibo(ordenes, idCliente);
+        Recibo nuevoRecibo = reciboService.crearRecibo(ordenes, cliente != null ? cliente.getId() : null);
 
         for (OrdenDePago orden : ordenes) {
+            orden.setEstado(PAGADO);
+            ordenDePagoService.guardarOrden(orden);
+
             for (ProductoOrden productoOrden : orden.getProductos()) {
                 if (productoOrden.isStockDescontado()) {
                     continue;
@@ -89,15 +110,18 @@ public class CarritoReciboController {
     }
 
 
-    @PostMapping("/agregar-consulta")
-    public void agregarConsulta(@RequestParam double precioTotal) {
-        carritoReciboService.agregarConsulta(precioTotal);
+
+
+    @PostMapping("/agregar-consulta/{precioTotal}")
+    public int agregarConsulta(@PathVariable double precioTotal) {
+        return carritoReciboService.agregarConsulta(precioTotal);
     }
 
-    @DeleteMapping("/quitar-consulta")
-    public void quitarConsulta() {
-        carritoReciboService.quitarConsulta();
+    @DeleteMapping("/quitar-consulta/{index}")
+    public void quitarConsulta(@PathVariable int index) {
+        carritoReciboService.quitarConsulta(index);
     }
+
 
 
 }

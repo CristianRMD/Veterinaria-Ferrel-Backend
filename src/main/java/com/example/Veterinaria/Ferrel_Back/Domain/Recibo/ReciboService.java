@@ -28,15 +28,9 @@ public class ReciboService {
 
     @Transactional
     public Recibo crearRecibo(List<OrdenDePago> ordenes, Long idCliente) {
-
-        if (idCliente == null) {
-            throw new IllegalArgumentException("El ID del cliente no puede ser nulo");
-        }
-
         Recibo recibo = new Recibo();
         recibo.setFechaHoraRegistro(LocalDateTime.now(ZoneId.of("America/Lima")));
-        recibo.setIdCliente((long) idCliente.intValue());
-
+        recibo.setIdCliente(idCliente); // permito que cliente pueda ser null en caso de que no este registrado en la BD
 
         BigDecimal totalOrdenes = ordenes.stream()
                 .map(orden -> BigDecimal.valueOf(orden.getTotal()))
@@ -54,7 +48,7 @@ public class ReciboService {
 
         recibo = reciboRepository.save(recibo);
 
-        // vincula las ordenes al recibo
+        // Vincula las órdenes al recibo
         for (OrdenDePago orden : ordenes) {
             ReciboOrden reciboOrden = new ReciboOrden();
             reciboOrden.setRecibo(recibo);

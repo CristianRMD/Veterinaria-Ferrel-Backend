@@ -21,7 +21,7 @@ public class Recibo {
     @Column(name = "id_recibo")
     private Long idRecibo;
 
-    @Column(name = "id_cliente", nullable = false)
+    @Column(name = "id_cliente", nullable = true)
     private Long  idCliente;
 
     @Column(name = "monto_total", nullable = false)
